@@ -13,7 +13,7 @@ class PwmSubNode(Node):
 	def __init__(self):
 		super().__init__('ser_com_subscriber')
 		self.get_logger().info("Node initiated")
-		self.sub_ = self.create_subscription(SerComStruct, '/motor_control', self.listener_callback, 10)
+		self.sub_ = self.create_subscription(SerComStruct, 'motor_throttle_control', self.listener_callback, 10)
 		
 		# Pin layout
 		self.pwm_l = 18         # pwm of left/right wheel
