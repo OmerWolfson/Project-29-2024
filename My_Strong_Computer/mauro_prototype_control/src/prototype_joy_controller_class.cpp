@@ -4,117 +4,161 @@ SerialCom PrototypeControl::compute_control(double throttle, double steering, bo
 {
     SerialCom ser_com;
 
-    // Parameters
-    double lin_sp;   // Robot's desired linear speed
-    double ang_sp;   // Robot's desired angular speed
-    double omega_l;  // Left wheel's angular speed
-    double omega_r;  // Right wheel's angular speed
-    double omega_max;// Maximum angular speed
-    double max_sp;   // Maximum linear speed for the is_high_gear
-
-    int pwm_l;       // PWM output left wheel
-    bool is_reverse_dir_l;       // is_reverse_direction output left wheel : 0(forward) / 1(backward) -> false (forward) / true (backwards)
-    int pwm_r;       // PWM output right wheel
-    bool is_reverse_dir_r;       // is_reverse_direction output right wheel : 0(forward) / 1(backward) -> false (forward) / true (backwards)
-
-    // Max linear speed calculation
-    if(is_high_gear) { // is_high_gear == true means high gear
+    int pwm_L;       // PWM output left wheel
+    bool is_reverse_dir_L;       // is_reverse_direction output left wheel : 0(forward) / 1(backward) -> false (forward) / true (backwards)
+    int pwm_R;       // PWM output right wheel
+    bool is_reverse_dir_R;       // is_reverse_direction output right wheel : 0(forward) / 1(backward) -> false (forward) / true (backwards)
+    double omega_L;
+    double omega_R;
         
-        if (throttle > thres)
-            max_sp = wheel_r * 2 * pi * 29.0; // forward high gear
-        else if ((-throttle) > thres)
-            max_sp = wheel_r * 2 * pi * 6.16; // reverse high gear
-        else if (std::abs(throttle) < thres)
-            max_sp = 0; // Static rotation    
-        
+    // Input (ratio) -1:1
+    if (abs(throttle) < thres){
+    throttle = 0;
     }
 
-    else {
-
-        if (throttle > thres)
-            max_sp = wheel_r * 2 * pi * 14.5; // forward low gear
-        else if ((-throttle) > thres)
-            max_sp = wheel_r * 2 * pi * 6.16; // reverse low gear
-        else if (std::abs(throttle) < thres)
-            max_sp = 0; // Static rotation
-
+    if (abs(steering) < thres){
+    steering = 0;
     }
 
-    // Desired linear speed
-    lin_sp = max_sp * throttle * 0.01;
+    if(throttle < 0){     // Reverse correction
+    throttle = throttle * (1 / thr_sens);
+    }
 
-    // Max angular speed calculation
-    if (lin_sp != 0)
-        omega_max = max_rad_acc / lin_sp;
-    else
-        omega_max = 12.32 * wheel_r / d; // Static rotation
+    if (throttle == 0){     // Static rotation
+    steering = steering * 1.6;    // Static rotation correcion
 
-    // Desired angular speed ; turning left = steering is positive -> angular spd around z axis = positive
-    ang_sp = omega_max * steering * 0.01;
+    if(steering < 0){    // Left
+        omega_L = 6.16 * steering;
+        omega_R = - 6.16 * steering;
+    }
+    else{                       // Right
+        omega_L = 6.16 * steering;
+        omega_R = - 6.16 * steering;
+    }
+    }
 
-    // Wheels' angular speed
-    omega_l = (lin_sp - (d * ang_sp / 2)) / wheel_r; // left wheel rotation speed
-    omega_r = (lin_sp + (d * ang_sp / 2)) / wheel_r;
-
-    // Opposite is_reverse_directions spinning
-    if (lin_sp != 0) {
-        if (omega_l * omega_r < 0) {
-            if (omega_l < 0) {
-                omega_l = 0;
-                omega_r = ang_sp * d / wheel_r;
-            } else {
-                omega_r = 0;
-                omega_l = ang_sp * d / wheel_r;
+    else if (throttle > 0){    // Forward
+        if (is_high_gear==true){   // Forward low
+        
+            if(steering == 0){      // Straight
+            omega_L = 15.56 * throttle;
+            omega_R = 15.56 * throttle;
             }
+            else if(steering < 0){    // Left
+            omega_L = 15.56 * throttle * (1 + steering);
+            omega_R = 15.56 * throttle;
+            }
+            else {                 // Right
+            omega_L = 15.56 * throttle;
+            omega_R = 15.56 * throttle * (1 - steering);
+            }
+
+        }
+        else{                    // Forward high
+
+            if(steering == 0){        // Straight
+            omega_L = 31.35 * throttle;
+            omega_R = 31.35 * throttle;
+            }
+                if(steering < 0){      // Left
+            omega_L = 31.35 * throttle * (1 + steering);
+            omega_R = 31.35 * throttle;
+            }
+            else if (steering > 0) {                 // Right
+            omega_L = 31.35 * throttle;
+            omega_R = 31.35 * throttle * (1 - steering);
+            }
+
         }
     }
 
-    // PWM output calculation
-    if(is_high_gear) {
+    else if (throttle < 0){    // Backward
+
+        if(steering == 0){        // Straight
+            omega_L = 6.16 * throttle;
+            omega_R = 6.16 * throttle;
+        }
+        else if(steering < 0){      // Left
+            omega_L = 6.16 * throttle * (1 + steering);
+            omega_R = 6.16 * throttle;
+        }
+        else {                 // Right
+            omega_L = 6.16 * throttle;
+            omega_R = 6.16 * throttle * (1 - steering);
+        }  
+
+    }
+
+
+    if (is_high_gear==true){               // Low gear
+
+        if (omega_L == 0){
+            pwm_L = 0;
+        }
+        else if (omega_L < 0){
+            pwm_L = SpeedCtrl(abs(omega_L), 2); // Backward low
+        }
+        else if (omega_L > 0){
+            pwm_L = SpeedCtrl(omega_L, 0);      // Forward low
+        }
+
+        if (omega_R == 0){
+            pwm_R = 0;
+        }
+        else if (omega_R < 0){
+            pwm_R = SpeedCtrl(abs(omega_R), 2); // Backward low
+        }
+        else if (omega_R > 0){
+            pwm_R = SpeedCtrl(omega_R, 0);      // Forward low
+        }
+
+    }
+    else if (is_high_gear==false){            //High gear
+
+        if(omega_L == 0){
+            pwm_L = 0;
+        }
+        else if (omega_L < 0){
+            pwm_L = SpeedCtrl(abs(omega_L), 3); // Backward high
+        }
+        else if (omega_L > 0){
+            pwm_L = SpeedCtrl(omega_L, 1);      // Forward high
+        }
+
+        if(omega_R == 0){
+            pwm_R = 0;
+        }
+        else if (omega_R < 0){
+            pwm_R = SpeedCtrl(abs(omega_R), 3); // Backward high
+        }
+        else if (omega_R > 0){
+            pwm_R = SpeedCtrl(omega_R, 1);      // Forward high
+        }
+
+    }
+
+    if ( omega_L < 0){
+    is_reverse_dir_L = true;
+    }
+    else{
+    is_reverse_dir_L = false;
+    }
+
+    if ( omega_R < 0){
+    is_reverse_dir_R = true;
+    }
+    else{
+    is_reverse_dir_R = false;
+    }
         
-        if (omega_l < 0)
-            pwm_l = SpeedCtrl(std::abs(omega_l), 3);
-        else
-            pwm_l = SpeedCtrl(omega_l, 1);
 
-        if (omega_r < 0)
-            pwm_r = SpeedCtrl(std::abs(omega_r), 3);
-        else
-            pwm_r = SpeedCtrl(omega_r, 1);
-            
-    }
-    else {
-
-        if (omega_l < 0)
-            pwm_l = SpeedCtrl(std::abs(omega_l), 2);
-        else
-            pwm_l = SpeedCtrl(omega_l, 0);
-
-        if (omega_r < 0)
-            pwm_r = SpeedCtrl(std::abs(omega_r), 2);
-        else
-            pwm_r = SpeedCtrl(omega_r, 0);
-            
-    }
-
-    if (omega_l < 0)
-        is_reverse_dir_l = true;
-    else
-        is_reverse_dir_l = false;
-
-    if (omega_r < 0)
-        is_reverse_dir_r = true;
-    else
-        is_reverse_dir_r = false;
-
-    ser_com.pwm_L = pwm_l;
-    ser_com.pwm_R = pwm_r;
-    ser_com.is_reverse_dir_L = is_reverse_dir_l;
-    ser_com.is_reverse_dir_R = is_reverse_dir_r;
-    ser_com.G = is_high_gear;
+    ser_com.pwm_L = pwm_L*100/255;
+    ser_com.pwm_R = pwm_R*100/255;
+    ser_com.is_reverse_dir_L = is_reverse_dir_L;
+    ser_com.is_reverse_dir_R = is_reverse_dir_R;
+    ser_com.gear = is_high_gear;
 
     return ser_com;
-
 
 }
 
@@ -124,33 +168,42 @@ int PrototypeControl::SpeedCtrl(double omega, int config) {
         pwm_outp = 0;
     else {
         switch (config) {
-            case 0: // forward low
-                if (omega <= 14.5)
-                    pwm_outp = 7.2374 * omega + 64.5066;
-                else
-                    pwm_outp = 168;
+        case 0: // Forward low
+            if (omega <= 15.56){
+                pwm_outp = int( 7.2374 * omega + 64.5066 );
                 break;
-            case 1: // forward high
-                if (omega <= 29.0)
-                    pwm_outp = 3.7325 * omega + 61.2301;
-                else
-                    pwm_outp = 168;
+            }
+            else{
+                pwm_outp = 178;
                 break;
-            case 2: // Backward low
-                if (omega <= 6.16)
-                    pwm_outp = 6.921 * omega + 65.9686;
-                else
-                    pwm_outp = 168;
+            }
+        case 1: // Forward high
+            if (omega <= 31.35){
+                pwm_outp = int( 3.7325 * omega + 61.2301 );
                 break;
-            case 3: // Backward high
-                if (omega <= 6.16)
-                    pwm_outp = 3.6837 * omega + 61.8913;
-                else
-                    pwm_outp = 168;
+            }
+            else{
+                pwm_outp = 178;
                 break;
-            default:
-                pwm_outp = 0;
+            }
+        case 2: // Backward low
+            if (omega <= 6.4){
+                pwm_outp = int(( 6.921 * omega + 65.9686 ) * 1.4);
                 break;
+            }
+            else{
+                pwm_outp = int(( 6.921 * 6.4 + 65.9686 ) * 1.4);
+                break;
+            }
+        case 3: // Backward high
+            if (omega <= 6.4){
+                pwm_outp = int(( 3.6837 * omega + 61.8913 ) * 1.4);
+                break;
+            }
+            else{
+                pwm_outp = int(( 3.6837 * 6.4 + 61.8913 ) * 1.4);
+                break;
+            }
         }
     }
     return pwm_outp;

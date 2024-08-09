@@ -9,7 +9,7 @@ public:
     bool is_reverse_dir_L; // if true - going reverse
     int pwm_R;
     bool is_reverse_dir_R;
-    bool G; // if true - high gear
+    bool gear; // if true - high gear
 };
 
 class PrototypeControl {
@@ -19,11 +19,12 @@ public:
     int SpeedCtrl(double omega, int config);
 
 private:
-    const double wheel_r = 0.175; // Wheel's radius [m]
-    const double d = 0.485;       // Wheels' distance [m]
-    const double max_rad_acc = 50;// Maximum radial acceleration constant(max cent force / m)[m / s^2]
+    // const double wheel_r = 0.175; // Wheel's radius [m]
+    // const double d = 0.485;       // Wheels' distance [m]
     const double pi = 3.14159265;
-    const int thres = 5;          // Threshold for mode switch (%)
+    const int thres = 0.05;          // Threshold for mode switch (%)
+    const double thr_sens = 0.9;      // 
+    const double tur_sens = 0.9;
 };
 
 
