@@ -5,10 +5,10 @@
 
 class SerialCom {
 public:
-    int pwm_A;
-    bool is_reverse_dir_A; // if true - going reverse
-    int pwm_B;
-    bool is_reverse_dir_B;
+    int pwm_L;
+    bool is_reverse_dir_L; // if true - going reverse
+    int pwm_R;
+    bool is_reverse_dir_R;
     bool G; // if true - high gear
 };
 

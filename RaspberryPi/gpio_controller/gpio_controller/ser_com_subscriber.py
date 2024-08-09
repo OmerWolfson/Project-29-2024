@@ -15,13 +15,13 @@ class PwmSubNode(Node):
 		self.get_logger().info("Node initiated")
 		self.sub_ = self.create_subscription(SerComStruct, 'motor_throttle_control', self.listener_callback, 10)
 		
-		# Pin layout
-		self.pwm_l = 18         # pwm of left/right wheel
-		self.pwm_r = 13
-		self.is_reverse_l = 15  # reverse state of left/right wheel
-		self.is_reverse_r = 19
-		self.gear_l = 14        # gear state of left/right wheel
-		self.gear_r = 26
+		# Pin layout 
+		self.pwm_l = 18          # pwm of left/right wheel
+		self.pwm_r = 13 
+		self.is_reverse_l = 15   # reverse state of left/right wheel
+		self.is_reverse_r = 19 
+		self.gear_l = 14         # gear state of left/right wheel
+		self.gear_r = 26 
 
 		# GPIO setup
 		GPIO.setwarnings(False)

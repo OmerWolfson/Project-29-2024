@@ -50,10 +50,10 @@ private:
         SerialCom ser_com = control.compute_control(throttle_*100.0, msg->axes[0]*100.0, is_high_gear_);
 
         auto pwm_struct = project29_interfaces::msg::SerComStruct();
-        pwm_struct.pwm_a = ser_com.pwm_A * 0.594177; // if using % output like RPi
-        pwm_struct.pwm_b = ser_com.pwm_B * 0.594177;
-        pwm_struct.is_reverse_dir_a = ser_com.is_reverse_dir_A;
-        pwm_struct.is_reverse_dir_b = ser_com.is_reverse_dir_B;
+        pwm_struct.pwm_l = ser_com.pwm_L * 0.594177; // if using % output like RPi
+        pwm_struct.pwm_r = ser_com.pwm_R * 0.594177;
+        pwm_struct.is_reverse_dir_l = ser_com.is_reverse_dir_L;
+        pwm_struct.is_reverse_dir_r = ser_com.is_reverse_dir_R;
         pwm_struct.gear = ser_com.G;
         publisher_->publish(pwm_struct);
 

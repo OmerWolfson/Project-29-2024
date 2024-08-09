@@ -3,9 +3,7 @@ Panels:
     Help Height: 78
     Name: Displays
     Property Tree Widget:
-      Expanded:
-        - /Global Options1
-        - /Status1
+      Expanded: ~
       Splitter Ratio: 0.5
     Tree Height: 549
   - Class: rviz_common/Selection
@@ -57,7 +55,7 @@ Visualization Manager:
         Durability Policy: Volatile
         History Policy: Keep Last
         Reliability Policy: Reliable
-        Value: /robot_control
+        Value: /robot_description
       Enabled: true
       Links:
         All Links Enabled: true
@@ -90,11 +88,6 @@ Visualization Manager:
           Show Trail: false
           Value: true
         left_wheel_link:
-          Alpha: 1
-          Show Axes: false
-          Show Trail: false
-          Value: true
-        lidar_link:
           Alpha: 1
           Show Axes: false
           Show Trail: false
@@ -139,8 +132,6 @@ Visualization Manager:
           Value: true
         left_wheel_link:
           Value: true
-        lidar_link:
-          Value: true
         rear_hinge:
           Value: true
         rear_wheel_link:
@@ -161,8 +152,6 @@ Visualization Manager:
               front_wheel_link:
                 {}
             left_wheel_link:
-              {}
-            lidar_link:
               {}
             rear_hinge:
               rear_wheel_link:
@@ -217,7 +206,7 @@ Visualization Manager:
   Views:
     Current:
       Class: rviz_default_plugins/Orbit
-      Distance: 2.1508774757385254
+      Distance: 3.0218281745910645
       Enable Stereo Rendering:
         Stereo Eye Separation: 0.05999999865889549
         Stereo Focal Distance: 1
@@ -232,10 +221,10 @@ Visualization Manager:
       Invert Z Axis: false
       Name: Current View
       Near Clip Distance: 0.009999999776482582
-      Pitch: 0.1953984498977661
+      Pitch: 0.35539835691452026
       Target Frame: <Fixed Frame>
       Value: Orbit (rviz)
-      Yaw: 0.4922158718109131
+      Yaw: 0.7272156476974487
     Saved: ~
 Window Geometry:
   Displays:

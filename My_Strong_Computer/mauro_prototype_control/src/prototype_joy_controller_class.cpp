@@ -107,10 +107,10 @@ SerialCom PrototypeControl::compute_control(double throttle, double steering, bo
     else
         is_reverse_dir_r = false;
 
-    ser_com.pwm_A = pwm_l;
-    ser_com.pwm_B = pwm_r;
-    ser_com.is_reverse_dir_A = is_reverse_dir_l;
-    ser_com.is_reverse_dir_B = is_reverse_dir_r;
+    ser_com.pwm_L = pwm_l;
+    ser_com.pwm_R = pwm_r;
+    ser_com.is_reverse_dir_L = is_reverse_dir_l;
+    ser_com.is_reverse_dir_R = is_reverse_dir_r;
     ser_com.G = is_high_gear;
 
     return ser_com;
