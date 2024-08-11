@@ -23,10 +23,10 @@ private:
     void callback_func(const sensor_msgs::msg::Joy::SharedPtr msg)
     {
         // Comments reffer to Sony's PlayStation controller 
-        if(msg->buttons[0]) // pressing 'X' shifts to high gear
-            is_high_gear_ = true;
-        else if(msg->buttons[3]) // pressing 'square' shifts to low gear
-            is_high_gear_ = false;
+        if(msg->buttons[0]) // pressing 'X' shifts to low gear
+            is_low_gear_ = true;
+        else if(msg->buttons[3]) // pressing 'square' shifts to high gear
+            is_low_gear_ = false;
 
         // Forward
         if(msg->axes[5] >= 0){
@@ -47,7 +47,7 @@ private:
         }
         
         PrototypeControl control;
-        SerialCom ser_com = control.compute_control(throttle_, msg->axes[0], is_high_gear_);
+        SerialCom ser_com = control.compute_control(throttle_, msg->axes[0], is_low_gear_);
 
         auto pwm_struct = project29_interfaces::msg::SerComStruct();
         pwm_struct.pwm_l = ser_com.pwm_L * 0.594177; // if using % output like RPi
@@ -67,7 +67,7 @@ private:
 
     rclcpp::Publisher<project29_interfaces::msg::SerComStruct>::SharedPtr publisher_;
     rclcpp::Subscription<sensor_msgs::msg::Joy>::SharedPtr subscription_;
-    bool is_high_gear_ = false; // Default low gear configuration
+    bool is_low_gear_ = true; // Default gear configuration set to low (true)
     double throttle_;
     int phi_right_;
     int phi_left_;

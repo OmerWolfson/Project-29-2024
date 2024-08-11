@@ -1,6 +1,6 @@
 #include "mauro_prototype_control/prototype_joy_controller_class.hpp"
 
-SerialCom PrototypeControl::compute_control(double throttle, double steering, bool is_high_gear) 
+SerialCom PrototypeControl::compute_control(double throttle, double steering, bool is_low_gear) 
 {
     SerialCom ser_com;
 
@@ -38,7 +38,7 @@ SerialCom PrototypeControl::compute_control(double throttle, double steering, bo
     }
 
     else if (throttle > 0){    // Forward
-        if (is_high_gear==true){   // Forward low
+        if (is_low_gear==true){   // Forward low
         
             if(steering == 0){      // Straight
             omega_L = 15.56 * throttle;
@@ -90,7 +90,7 @@ SerialCom PrototypeControl::compute_control(double throttle, double steering, bo
     }
 
 
-    if (is_high_gear==true){               // Low gear
+    if (is_low_gear==true){               // Low gear
 
         if (omega_L == 0){
             pwm_L = 0;
@@ -113,7 +113,7 @@ SerialCom PrototypeControl::compute_control(double throttle, double steering, bo
         }
 
     }
-    else if (is_high_gear==false){            //High gear
+    else if (is_low_gear==false){            //High gear
 
         if(omega_L == 0){
             pwm_L = 0;
@@ -156,7 +156,7 @@ SerialCom PrototypeControl::compute_control(double throttle, double steering, bo
     ser_com.pwm_R = pwm_R*100/255;
     ser_com.is_reverse_dir_L = is_reverse_dir_L;
     ser_com.is_reverse_dir_R = is_reverse_dir_R;
-    ser_com.gear = is_high_gear;
+    ser_com.gear = is_low_gear;
 
     return ser_com;
 

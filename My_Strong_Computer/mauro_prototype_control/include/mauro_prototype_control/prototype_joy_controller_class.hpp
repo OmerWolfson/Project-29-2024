@@ -14,7 +14,7 @@ public:
 
 class PrototypeControl {
 public:
-    SerialCom compute_control(double throttle, double steering, bool is_high_gear);
+    SerialCom compute_control(double throttle, double steering, bool is_low_gear);
 
     int SpeedCtrl(double omega, int config);
 

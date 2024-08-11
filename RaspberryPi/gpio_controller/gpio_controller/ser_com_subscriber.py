@@ -41,17 +41,20 @@ class PwmSubNode(Node):
 		self.prev_msg = True 
 
 	def listener_callback(self, msg):		
+		
+		if msg.pwm_l > 1 and msg.pwm_r > 1:
+			self.get_logger().info(f"PWM:\nLeft: {msg.pwm_l}, Right: {msg.pwm_r}")
+			self.get_logger().info(f"Reverse direction:\nLeft : {msg.is_reverse_dir_l}, Right: {msg.is_reverse_dir_r}")
+		elif msg.pwm_l < 0 or msg.pwm_r < 0:
+			self.get_logger().error(f"Sending negative PWM: \nLeft: {msg.pwm_l}, Right: {msg.pwm_r}")
+
 		# Set PWM values
 		self.left_throttle.ChangeDutyCycle(msg.pwm_l)
 		self.right_throttle.ChangeDutyCycle(msg.pwm_r)
-		if msg.pwm_l > 1 and msg.pwm_r > 1:
-			self.get_logger().info(f"PWM:\nLeft: {msg.pwm_l}, Right: {msg.pwm_r}")
 
 		# Set reverse values
 		GPIO.output(self.is_reverse_l, msg.is_reverse_dir_l)
 		GPIO.output(self.is_reverse_r, msg.is_reverse_dir_r)
-		if msg.is_reverse_dir_l and msg.is_reverse_dir_r:
-			self.get_logger().info(f"Reverse direction:\nLeft : {msg.is_reverse_dir_l}, Right: {msg.is_reverse_dir_r}")
 
 		# Set gear values
 		GPIO.output(self.gear_l, msg.gear)
