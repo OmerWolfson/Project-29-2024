@@ -47,6 +47,7 @@ private:
         }
         
         PrototypeControl control;
+        RCLCPP_INFO(this->get_logger(), "Steering : '%f'", msg->axes[0]);
         SerialCom ser_com = control.compute_control(throttle_, msg->axes[0], is_low_gear_);
 
         auto pwm_struct = project29_interfaces::msg::SerComStruct();

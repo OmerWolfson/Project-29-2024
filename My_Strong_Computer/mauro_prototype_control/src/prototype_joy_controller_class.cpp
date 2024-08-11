@@ -4,37 +4,37 @@ SerialCom PrototypeControl::compute_control(double throttle, double steering, bo
 {
     SerialCom ser_com;
 
-    int pwm_L;       // PWM output left wheel
-    bool is_reverse_dir_L;       // is_reverse_direction output left wheel : 0(forward) / 1(backward) -> false (forward) / true (backwards)
-    int pwm_R;       // PWM output right wheel
-    bool is_reverse_dir_R;       // is_reverse_direction output right wheel : 0(forward) / 1(backward) -> false (forward) / true (backwards)
+    int pwm_L;              // PWM output left wheel
+    bool is_reverse_dir_L;  // is_reverse_direction output left wheel : 0(forward) / 1(backward) -> false (forward) / true (backwards)
+    int pwm_R;              // PWM output right wheel
+    bool is_reverse_dir_R;  // is_reverse_direction output right wheel : 0(forward) / 1(backward) -> false (forward) / true (backwards)
     double omega_L;
     double omega_R;
         
     // Input (ratio) -1:1
     if (abs(throttle) < thres){
-    throttle = 0;
+        throttle = 0;
     }
 
     if (abs(steering) < thres){
-    steering = 0;
+        steering = 0;
     }
 
     if(throttle < 0){     // Reverse correction
-    throttle = throttle * (1 / thr_sens);
+        throttle = throttle * (1 / thr_sens);
     }
 
     if (throttle == 0){     // Static rotation
-    steering = steering * 1.6;    // Static rotation correcion
+        steering = steering * 1.6;    // Static rotation correcion
 
-    if(steering < 0){    // Left
-        omega_L = 6.16 * steering;
-        omega_R = - 6.16 * steering;
-    }
-    else{                       // Right
-        omega_L = 6.16 * steering;
-        omega_R = - 6.16 * steering;
-    }
+        if(steering < 0){    // Right
+            omega_L = 6.16 * steering;
+            omega_R = -6.16 * steering;
+        }
+        else{                // Left
+            omega_L = -6.16 * steering;
+            omega_R = 6.16 * steering;
+        }
     }
 
     else if (throttle > 0){    // Forward
@@ -44,27 +44,27 @@ SerialCom PrototypeControl::compute_control(double throttle, double steering, bo
             omega_L = 15.56 * throttle;
             omega_R = 15.56 * throttle;
             }
-            else if(steering < 0){    // Left
+            else if (steering < 0){  // Right
             omega_L = 15.56 * throttle * (1 + steering);
             omega_R = 15.56 * throttle;
             }
-            else {                 // Right
+            else if (steering > 0) { // Left
             omega_L = 15.56 * throttle;
             omega_R = 15.56 * throttle * (1 - steering);
             }
 
         }
-        else{                    // Forward high
+        else{    // Forward high
 
             if(steering == 0){        // Straight
             omega_L = 31.35 * throttle;
             omega_R = 31.35 * throttle;
             }
-                if(steering < 0){      // Left
+                if (steering < 0){     // Right
             omega_L = 31.35 * throttle * (1 + steering);
             omega_R = 31.35 * throttle;
             }
-            else if (steering > 0) {                 // Right
+            else if (steering > 0) {   // Left
             omega_L = 31.35 * throttle;
             omega_R = 31.35 * throttle * (1 - steering);
             }

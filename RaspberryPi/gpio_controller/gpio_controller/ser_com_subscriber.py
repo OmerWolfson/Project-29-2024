@@ -60,7 +60,7 @@ class PwmSubNode(Node):
 		GPIO.output(self.gear_l, msg.gear)
 		GPIO.output(self.gear_r, msg.gear)
 		if msg.gear is not self.prev_msg:
-			self.get_logger().info(f"Gear changed to {msg.gear}")
+			self.get_logger().info(f"Gear changed to {'LOW' if msg.gear else 'HIGH'}")
 			self.prev_msg = msg.gear
 		
 
