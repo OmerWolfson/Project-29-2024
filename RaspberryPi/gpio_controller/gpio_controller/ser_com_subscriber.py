@@ -44,7 +44,7 @@ class PwmSubNode(Node):
 		# Set PWM values
 		self.left_throttle.ChangeDutyCycle(msg.pwm_l)
 		self.right_throttle.ChangeDutyCycle(msg.pwm_r)
-		if msg.pwm_l > 50 and msg.pwm_r > 50:
+		if msg.pwm_l > 1 and msg.pwm_r > 1:
 			self.get_logger().info(f"PWM:\nLeft: {msg.pwm_l}, Right: {msg.pwm_r}")
 
 		# Set reverse values
