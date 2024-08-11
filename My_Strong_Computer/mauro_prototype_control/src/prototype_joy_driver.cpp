@@ -47,7 +47,7 @@ private:
         }
         
         PrototypeControl control;
-        SerialCom ser_com = control.compute_control(throttle_, msg->axes[0], is_high_gear_);
+        SerialCom ser_com = control.compute_control(throttle_, -msg->axes[0], is_high_gear_); // sending steering: left as negative right as positive (-1 : 1)
 
         auto pwm_struct = project29_interfaces::msg::SerComStruct();
         pwm_struct.pwm_l = ser_com.pwm_L * 0.594177; // if using % output like RPi
