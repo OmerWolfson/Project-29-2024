@@ -21,10 +21,11 @@ public:
 private:
     // const double wheel_r = 0.175; // Wheel's radius [m]
     // const double d = 0.485;       // Wheels' distance [m]
-    const double pi = 3.14159265;
-    const int thres = 0.05;          // Threshold for mode switch (%)
-    const double thr_sens = 0.9;      // 
-    const double tur_sens = 0.9;
+    const int THRES = 0.05;          // Threshold for mode switch (%)
+    const int SENS_F = 1;		     // Static rotation correction
+    const int SENS_B = 1;		     // Static rotation correction
+    const int MAX_PWM_F = 100;		// Maximum PWM output - forward
+    const int MAX_PWM_B = 100;		// Maximum PWM output - backward
 };
 
 
