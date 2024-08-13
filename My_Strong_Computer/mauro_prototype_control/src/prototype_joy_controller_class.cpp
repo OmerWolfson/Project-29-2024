@@ -27,6 +27,8 @@ SerialCom PrototypeControl::compute_control(double throttle, double steering, bo
     if (abs(steering) < THRES){
         steering = 0;
     }
+    is_reverse_dir_L = false; // initialize forward motion
+    is_reverse_dir_R = false; // initialize forward motion
 
     if (throttle == 0){     // Static rotation
 	    if(steering < 0){    // Left
@@ -58,10 +60,14 @@ SerialCom PrototypeControl::compute_control(double throttle, double steering, bo
 	    if(steering < 0){      // Left
             pwm_L = MAX_PWM_B * throttle * (1 + steering);
             pwm_R = MAX_PWM_B * throttle;
+            is_reverse_dir_L = true;
+            is_reverse_dir_R = true;
         }
         else {                 // Right - straight
             pwm_L = MAX_PWM_B * throttle;
             pwm_R = MAX_PWM_B * throttle * (1 - steering);
+            is_reverse_dir_L = true;
+            is_reverse_dir_R = true;
         }  
     }
 

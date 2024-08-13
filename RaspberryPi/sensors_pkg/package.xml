@@ -1,22 +1,19 @@
 <?xml version="1.0"?>
 <?xml-model href="http://download.ros.org/schema/package_format3.xsd" schematypens="http://www.w3.org/2001/XMLSchema"?>
 <package format="3">
-  <name>mauro_prototype_control</name>
+  <name>sensors_pkg</name>
   <version>0.0.0</version>
   <description>TODO: Package description</description>
   <maintainer email="omerwolf.work@gmail.com">omerwolf</maintainer>
   <license>TODO: License declaration</license>
 
-  <depend>rclcpp</depend>
-  <depend>rclpy</depend>
-  <depend>sensor_msgs</depend>
-  <depend>geometry_msgs</depend>
-  <depend>trajectory_msgs</depend>
-  <depend>std_msgs</depend>
-  <depend>velocity_controllers</depend>
-  <depend>project29_interfaces</depend>
-
   <buildtool_depend>ament_cmake</buildtool_depend>
+  <buildtool_depend>ament_cmake_python</buildtool_depend>
+
+  <depend>rclpy</depend>
+  <depend>rclcpp</depend>
+  <depend>sensor_msgs</depend>
+  <depend>cv2</depend>
 
   <test_depend>ament_lint_auto</test_depend>
   <test_depend>ament_lint_common</test_depend>

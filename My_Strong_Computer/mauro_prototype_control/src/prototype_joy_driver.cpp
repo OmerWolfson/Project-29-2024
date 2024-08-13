@@ -47,11 +47,12 @@ private:
         }
         
         PrototypeControl control;
+        RCLCPP_INFO(this->get_logger(), "throttle : '%f'", throttle_);
         SerialCom ser_com = control.compute_control(throttle_, -msg->axes[0], is_high_gear_); // sending steering: left as negative right as positive (-1 : 1)
 
         auto pwm_struct = project29_interfaces::msg::SerComStruct();
-        pwm_struct.pwm_l = ser_com.pwm_L * 0.594177; // if using % output like RPi
-        pwm_struct.pwm_r = ser_com.pwm_R * 0.594177;
+        pwm_struct.pwm_l = ser_com.pwm_L; // if using % output like RPi /255*100=0.594177
+        pwm_struct.pwm_r = ser_com.pwm_R;
         pwm_struct.is_reverse_dir_l = ser_com.is_reverse_dir_L;
         pwm_struct.is_reverse_dir_r = ser_com.is_reverse_dir_R;
         pwm_struct.gear = ser_com.gear;
