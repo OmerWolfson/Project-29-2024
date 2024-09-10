@@ -16,6 +16,7 @@ ament_python_install_package(${PROJECT_NAME})
 
 install(PROGRAMS
   ${PROJECT_NAME}/prototype_camera_publisher.py
+  ${PROJECT_NAME}/prototype_people_detector.py
   DESTINATION lib/${PROJECT_NAME}
 )
 
