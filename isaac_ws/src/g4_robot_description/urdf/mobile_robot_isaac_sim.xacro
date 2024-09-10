@@ -1,0 +1,73 @@
+<?xml version="1.0"?>
+<robot xmlns:xacro="http://www.ros.org/wiki/xacro">
+
+    
+    <!-- <xacro:property name="initial_positions" value="${xacro.load_yaml(initial_positions_file)['initial_positions']}"/> -->
+
+    <transmission name="right_wheel_trans">
+        <type>transmission_interface/SimpleTransmission</type>
+        <joint name="right_wheel_joint">
+            <hardwareInterface>hardware_interface/VelocityJointInterface</hardwareInterface>
+        </joint>
+        <actuator name="right_wheel_motor">
+        <mechanicalReduction>1</mechanicalReduction>
+        </actuator>
+    </transmission>
+
+    <transmission name="left_wheel_trans">
+        <type>transmission_interface/SimpleTransmission</type>
+        <joint name="left_wheel_joint">
+            <hardwareInterface>hardware_interface/VelocityJointInterface</hardwareInterface>
+        </joint>
+        <actuator name="left_wheel_motor">
+        <mechanicalReduction>1</mechanicalReduction>
+        </actuator>
+    </transmission>
+
+    <ros2_control name="IsaacSimSystem" type="system">
+        <hardware>
+        <!-- Leave UNcommented ONLY the plugin you WANT to use -->
+
+        <!-- If using a ros2_control_hardware_type 'mock_components' - leave uncomment -->
+            <!-- <plugin>mock_components/GenericSystem</plugin> -->
+        
+        <!-- If using a ros2_control_hardware_type 'isaac' - leave uncomment -->
+            <!-- first option is simple system perfect conrtrol -->
+            <!-- <plugin>mock_components/GenericSystem</plugin> -->
+
+            <!-- second option is topic based when not supporting connection to hardware -->
+            <plugin>topic_based_ros2_control/TopicBasedSystem</plugin>
+            <param name="joint_commands_topic">/isaac_joint_commands</param>
+            <param name="joint_states_topic">/isaac_joint_states</param>
+            <param name="sum_wrapped_joint_states">false</param> <!-- counts number of wraps (turns) the wheel made -->
+        </hardware>
+
+        <joint name="right_wheel_joint">
+            <command_interface name="velocity">
+                <param name="min">-10</param>
+                <param name="max">10</param>
+            </command_interface>
+            <state_interface name="velocity">
+                <param name="initial_value">0.0</param>
+            </state_interface>
+            <state_interface name="position">
+                <param name="initial_value">0.0</param>
+            </state_interface>
+        </joint>
+
+        <joint name="left_wheel_joint">
+            <command_interface name="velocity">
+                <param name="min">-10</param>
+                <param name="max">10</param>
+            </command_interface>
+            <state_interface name="velocity">
+                <param name="initial_value">0.0</param>
+            </state_interface>
+            <state_interface name="position">
+                <param name="initial_value">0.0</param>
+            </state_interface>
+        </joint>
+        
+    </ros2_control>
+    
+</robot>

@@ -1,0 +1,6 @@
+Spawn Tom
+Spawn Jerry -3.3 24.0 0 90
+Tom GoTo -12.3 8.6 0 _
+Tom GoTo -14.0 23.1 0 270
+Tom LookAround 5.0
+Tom GoTo -13.0 8.6 0 _

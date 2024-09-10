@@ -1,0 +1,56 @@
+<?xml version="1.0"?>
+<robot xmlns:xacro="http://www.ros.org/wiki/xacro">
+
+    <gazebo reference="base_link">
+        <material>Gazebo/Blue</material>
+    </gazebo>
+
+    <gazebo reference="right_wheel_link">
+        <material>Gazebo/Yellow</material>
+        <mu1 value="100" />
+        <mu2 value="100" />
+    </gazebo>
+
+    <gazebo reference="left_wheel_link">
+        <material>Gazebo/Yellow</material>
+        <mu1 value="100" />
+        <mu2 value="100" />
+    </gazebo> 
+
+    <ros2_control name="GazeboSystem" type="system"> <!-- maybe GazeboSimSystem and not GazeboSystem -->
+        <hardware>
+            <plugin>gazebo_ros2_control/GazeboSystem</plugin>
+        </hardware>
+
+        <joint name="right_wheel_joint">
+            <command_interface name="velocity">
+                <param name="min">-10</param>
+                <param name="max">10</param>
+            </command_interface>
+            <state_interface name="velocity">
+                <param name="initial_value">0</param>
+            </state_interface>
+            <state_interface name="position"/>
+            <state_interface name="effort"/>
+        </joint>
+        <joint name="left_wheel_joint">
+            <command_interface name="velocity">
+                <param name="min">-10</param>
+                <param name="max">10</param>
+            </command_interface>
+            <state_interface name="velocity">
+                <param name="initial_value">0</param>
+            </state_interface>
+            <state_interface name="position"/>
+            <state_interface name="effort"/>
+        </joint>
+    </ros2_control> 
+
+    <gazebo>
+        <plugin filename="libgazebo_ros2_control.so" name="gazebo_ros2_control">
+            <parameters>$(find g4_robot_description)/config/joint_controller.yaml</parameters>
+        </plugin>
+    </gazebo>
+
+
+</robot>

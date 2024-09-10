@@ -1,0 +1,36 @@
+<?xml version="1.0"?>
+<robot xmlns:xacro="http://www.ros.org/wiki/xacro">
+
+    <!-- ${-(pi) / 12.0 * 11} = -2.87979327-->
+
+    <gazebo reference="lidar_link">
+        <material>Gazebo/Black</material>
+
+        <sensor name="lidar" type="ray">
+            <pose>0 0 0 0 0 0</pose>
+            <visualize>true</visualize>
+            <update_rate>10.0</update_rate>
+            <ray>
+                <scan>
+                    <horizontal>
+                        <samples>110</samples> <!-- originally was 330 (very high resolution)-->
+                        <min_angle>${-(pi) / 12.0 * 11}</min_angle>
+                        <max_angle>${pi / 12.0 * 11}</max_angle>
+                    </horizontal>
+                </scan>
+                <range>
+                    <min>0.3</min>
+                    <max>12</max>
+                </range>
+            </ray>
+            <plugin name="lidar_controller" filename="libgazebo_ros_ray_sensor.so">
+                <ros>
+                    <argument>~/out:=lidar</argument>
+                </ros>
+                <output_type>sensor_msgs/LaserScan</output_type>
+                <frame_name>lidar_link</frame_name>
+            </plugin>
+        </sensor>
+    </gazebo>
+
+</robot>

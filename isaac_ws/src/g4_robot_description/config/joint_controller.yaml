@@ -1,0 +1,40 @@
+controller_manager:
+  ros__parameters:
+    update_rate: 100 #Hz   100 is more logical
+    use_sim_time: true
+
+    joint_velocity_controller:
+      type: velocity_controllers/JointGroupVelocityController
+
+    joint_state_broadcaster:
+      type: joint_state_broadcaster/JointStateBroadcaster
+
+
+# If using our own Diff Drive Controller
+joint_velocity_controller:
+  ros__parameters:
+    joints:
+      - right_wheel_joint
+      - left_wheel_joint
+    interface_name: velocity
+    command_interfaces:
+      - velocity
+    state_interfaces:
+      - position
+      - velocity
+
+
+
+# diff_drive_controller:       #diff_drive_controller 
+#   ros__parameters:
+
+#     base_frame_id: mobile_base_footprint
+
+#     left_wheel_names: ["left_wheel_joint"]
+#     right_wheel_names: ["right_wheel_joint"]
+#     wheel_separation: 0.77 #${mobile_w - leg_w} #${0.85 - 0.08}
+#     wheel_radius: 0.16 #${wheel_radius}  #wheel_radius = 0.16
+
+#     use_stamped_vel: false #articulated video
+#     #cmd_vel_timeout: 0.5
+#     publish_rate: 100
