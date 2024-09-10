@@ -40,6 +40,7 @@ class PwmSubNode(Node):
 		self.right_throttle.start(0)
 		self.prev_msg = True 
 
+<<<<<<< HEAD
 	def listener_callback(self, msg):		
 		
 		if msg.pwm_l > 1 and msg.pwm_r > 1:
@@ -49,6 +50,14 @@ class PwmSubNode(Node):
 			self.get_logger().error(f"Sending negative PWM: \nLeft: {msg.pwm_l}, Right: {msg.pwm_r}")
 
 		# Set PWM values
+=======
+	def listener_callback(self, msg):
+		# Set PWM values
+		if msg.pwm_l > 1 and msg.pwm_r > 1:
+			self.get_logger().info(f"PWM:\nLeft: {msg.pwm_l}, Right: {msg.pwm_r}")
+		elif msg.pwm < 0 or msg.pwm_r < 0:
+			self.get_logger().error(f"Sending negative PWM:\nLeft: {msg.pwm_l}, Right: {msg.pwm_r}")
+>>>>>>> pure_throttle_meth
 		self.left_throttle.ChangeDutyCycle(msg.pwm_l)
 		self.right_throttle.ChangeDutyCycle(msg.pwm_r)
 
